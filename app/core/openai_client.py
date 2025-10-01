@@ -17,17 +17,13 @@ async def stream_openai_chat(body: ChatRequest):
         messages=[m.dict() for m in body.messages],
         stream=True
     )
-    full_content = ""
+
     for chunk in response:
         if not chunk.choices or not chunk.choices[0].delta:
             continue
         delta = chunk.choices[0].delta.content
+
         if delta:
-            full_content += delta
-            if delta.endswith((".", "!", "?", "\n")):
-                yield full_content
-                full_content = ""
-    if full_content:
-        yield full_content
+            yield delta
 
 
