@@ -10,20 +10,22 @@ client = AzureOpenAI(
     azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT")
 )
 
-
 async def stream_openai_chat(body: ChatRequest):
-    response = client.chat.completions.create(
-        model=os.getenv("AZURE_OPENAI_DEPLOYMENT_NAME"),
-        messages=[m.dict() for m in body.messages],
-        stream=True
-    )
+    try:
+        response = client.chat.completions.create(
+            model=os.getenv("AZURE_OPENAI_DEPLOYMENT_NAME"),
+            messages=[m.dict() for m in body.messages],
+            stream=True
+        )
 
-    for chunk in response:
-        if not chunk.choices or not chunk.choices[0].delta:
-            continue
-        delta = chunk.choices[0].delta.content
+        for chunk in response:
+            if not chunk.choices or not chunk.choices[0].delta:
+                continue
+            delta = chunk.choices[0].delta.content
 
-        if delta:
-            yield delta
+            if delta:
+                yield delta
 
+    except Exception as e:
+        yield f"Error: {str(e)}"
 
