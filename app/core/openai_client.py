@@ -19,8 +19,9 @@ async def stream_openai_chat(body: ChatRequest):
         )
 
         for chunk in response:
-            if not chunk.choices or not chunk.choices[0].delta:
+            if not chunk.choices or len(chunk.choices) <= 0 or not chunk.choices[0].delta:
                 continue
+
             delta = chunk.choices[0].delta.content
 
             if delta:
