@@ -66,4 +66,4 @@ async def review_document(file: UploadFile = File(...)):
         return parsed
     except:
         # Return raw text if not valid JSON
-        return {"raw_output": raw_output, "warning": "Could not parse perfect JSON"}
+        return {"raw_output": sanitized_output, "warning": "Could not parse perfect JSON"}
